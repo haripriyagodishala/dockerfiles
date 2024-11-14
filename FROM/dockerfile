@@ -1,1 +1,8 @@
 FROM almalinux:9
+
+#docker build -t username/imagename:version . --> Dockerfile is required in current folder
+#docker tag imagename:version username/imagename:version
+#docker login
+#docker push username/imagename:version
+#docker run -d -p 80:80 username/imagename:version
+#docker exec -it username/imagename:version bash
