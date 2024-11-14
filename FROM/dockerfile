@@ -6,3 +6,10 @@ FROM almalinux:9
 #docker push username/imagename:version
 #docker run -d -p 80:80 username/imagename:version
 #docker exec -it username/imagename:version bash
+
+ENTRYPOINT -
+systemctl start Docker -> Starts the Docker in server if it is already installed
+usermod -aG docker ec2-user -> adding ec2-user to the docker group
+exit and login again to see the changes that is if user added to docker group or not
+docker ps -> shows the running containers
+search Dockerfile reference to know about the all commands details
