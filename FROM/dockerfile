@@ -6,3 +6,6 @@ FROM almalinux:9
 #docker push username/imagename:version
 #docker run -d -p 80:80 username/imagename:version
 #docker exec -it username/imagename:version bash
+
+
+hello
