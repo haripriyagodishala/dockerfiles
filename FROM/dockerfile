@@ -182,51 +182,156 @@ docker run -d -p 8080:80 onbuild-test:v1
 
 copy the ip and see the result in web
 onbuild is used to trigger few instructions at build when a user is using our image.
+----------------------------------------------------------
+EXPENSE-PROJECT
+Create Expense-docker repo in github
+Create mysql folder inside expense-docker folder
+Create dockerfile inside mysql folder
 
+2 ways
+1. taking one base OS like almalinux:9 and then installing mysql server --> no use of docker here
+2. Directly taking mysql server official Image
 
+We no need to worry about the underlying base os image which is using in official images from docker hub
+Our only aim is to deploy and run the application without any errors/lags
 
+we use mysql8.0 version
+FROM mysql:8.0
+#setting root password for mysql server
+ENV MYSQL_ROOT_PASSWORD = ExpenseApp@1
+#creating database in the time of container creation
+    #MYSQL_DATABASE=transactions \
+    #MYSQL_USER=expense \
+    #MYSQL_PASSWORD=ExpenseApp@1
+ADD  scripts/*.sql /docker-entrypoint-initdb.d
 
+create schema.sql file inside scripts folder which contains code about mysql database
 
+In dockerhub search for official image of image you can find full documentation
+backend->schema->backend.sql
 
+git push, pull and cd to mysql
+cat dockerfile
 
+build -> docker build -t mysql:v1 .
+run, execute -> mysql-u root -pExpenseApp@1
+show databases;
+use transactions;
+show tables;
+--------------------------------
+Create an instance - docker take storage as 50 gb
+open concepts git topic and open resize EBS storage
 
+Write a shell script to install docker in archive folder
 
+open superputty and run sudo su -
+vim install docker-install.sh -> copy paste the script here and enter :wq!
+sh install-docker.sh
+exit and relogin
+docker ps
+dh -hT -> memory details
+sudo su -
+run commands which are there in resize file
+lsblk
+sudo growpart
+sudo lvextend
+goto ec2-user
+-------------------------
+Docker network
+every vm get access to internet from aws ISP
+docker0: is a virtual n/w interface. It acts as modem to
+the containers in vm
 
+git clone repo link
+cd to mysql
+build, run
+docker ps
+ifconfig
+docker ps
+docker inspect
+ expense-documentation/backend.md
+download the code in local machine and extract all
+dockerfile in backend
+ search for official image of node in docker reference
+ in dockerfile -
+FROM node:20
+EXPOSE 8080 #just gives information
+RUN mkdir /opt/server
+WORKDIR /opt/server
+COPY package.json .
+COPY *.js .
+RUN npm install
+CMD ["node","index.js"]
+#ENV DB_HOST="mysql"
+ENV DB_HOST="local host"
+docker run -d --name mysql mysql:v1
 
+git push, pull, cd to respective folder
+build, docker images, run by giving name backend
+docker logs cont-id
+you will get error
+bcoz when docker uses default/bridge network, it can not communicate between the containers
+you have to create your own bridge network called expense
+docker network create expense
+docker network ls
+ifconfig
+docker network connect expense mysql
+docker inspect mysql
 
+docker build
+docker network ls
+docker run -d --network expense/host --name mysql mysql:v1
+docker run -d --network expense/host --name backend backend:v1
+netstat -lntp
+docker ps
+sudo netstat -lntp
+docker inspect mysql
+no ip address for mysql
 
+docker ps
+docker logs backend
+docker exec -it backend bash
+telnet will not be there
+Install telnet
+to know os -> cat /etc/release
+install telnet in docker debian -> search in web
+RUN apt update && apt install telnet
+telnet mysql 3306 -> check for connection
+apt remove telnet -y
 
+-----------------------------------------
+frontend
+create a frontend folder
+download frontend code in expense documentation folder
+download and extract all
 
+create a code folder inside of frontend and move all files code into this
+In dockerfile
+FROM nginx
+COPY code /usr/share/nginx/html
+RUN rm -rf /etc/nginx/nginx.conf
+RUN rm -rf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
+#COPY expense.conf /etc/nginx/conf.d/expense.conf
 
+git push, pull, cd to frontend folder
+docker build -t frontend:v1 .
+docker ps
+run command with exposing port
+docker run -d -p 80:80 --network expense --name frontend frontend:v1
+docker exec -it frontend bash
+cd /usr/share/nginx/html/
+ls -l
+cd /etc/nginx/
+Copy paste expense.conf data from github to vs code
+replace localhost with backend
 
+host:
+containers using host n/w will not get IP address means containers are sharing host IP address
+Containers open host port
+mysql -> 3306 -> host port
+backend -> 8080 -> hostport
+frontend -> 80 -> host port
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+nginx.conf -> backend with localhost
 
