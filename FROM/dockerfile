@@ -7,9 +7,226 @@ FROM almalinux:9
 #docker run -d -p 80:80 username/imagename:version
 #docker exec -it username/imagename:version bash
 
+FROM --> Should be the first instruction to refer base OS
+RUN --> installing packages and configuring image. runs at build time
+CMD --> Runs at container creation time, it keeps container running ["command-name", "params"]
+LABEL --> adds metadata to the image, useful while filtering the images
+EXPOSE --> informs about the ports opened by container, cant' really open the ports, just as a information to user
+COPY --> copies the files from workspace to image
+ADD --> 1. can download files directly from internet, can untar directly into image
+ENV --> sets the env variables to the container
+
 ENTRYPOINT -
 systemctl start Docker -> Starts the Docker in server if it is already installed
 usermod -aG docker ec2-user -> adding ec2-user to the docker group
 exit and login again to see the changes that is if user added to docker group or not
 docker ps -> shows the running containers
 search Dockerfile reference to know about the all commands details
+
+Create a folder ENTRYPOINT and dockerfile
+In dockerfile -
+FROM almalinux:9
+CMD ["ping","google.com"]
+
+GIT clone in gitbash and in server also
+gitbash-> git add, commit, push 
+server -> git pull
+
+superputty -> cd entrypoint/
+docker build -t entry:v1 .
+docker run -d entry:va
+docker ps
+docker logs -f <container-id> => -f for follow
+google.com runs infinite time
+docker rm -f <container-id> => removing container
+docker run -d entry:v1 ping yahoo.com
+yahoo.com runs infinite time
+
+CMD can be overriden at run time
+In dockerfile -
+FROM almalinux:9
+#CMD ["ping","google.com"]
+ENTRYPOINT ["ping","google.com"]
+
+In gitbash -> git add, commit, push
+in server -> git pull
+rebuild -> docker build -t entry:v1 .
+rerun -> docker run -d entry:v1
+docker logs <cont-id>
+pinged google.com runs infinite time
+docker ps
+remove the prev container -> docker rm -f <cont-id>
+docker run -d entry:v1 ping yahoo.com
+docker ps -a
+docker ps -a --no-trunc
+ping google.com ping yahoo.com
+We can not override ENTRYPOINT like CMD
+If we try to do, it will append to command in entrypoint
+
+for better results and best practices 
+CMD can provide arguments to entrypoint
+so we can mention dafault args through CMD and we can override them at runtime
+
+
+In dockerfile -
+FROM almalinux:9
+CMD ["google.com"] -> default arugment
+ENTRYPOINT ["ping"] 
+
+git push, pull in server
+rebuild and run
+docker logs cont-id -> google.com pinges
+docker rm -f cont-id
+docker run -d entry:v1 yahoo.com
+docker logs -f cont-id
+yahoo.com will replace google.com
+docker run entry:v1 microsoft.com
+
+build, run, execute
+docker build -t user:v1 .
+docker run -d -p 80:80 user:v1
+docker exec -it cont-id bash
+-it => interactive terminal
+you will get root access here when you don't have user instruction in dockerfile. 
+cat dockerfile
+
+USER instruction -
+FROM almalinux:9
+RUN useradd expense
+USER expense
+CMD ["sleep","100"]
+
+git push and pull
+rebuild, run, execute
+
+USER - foe security you should not run containers using root users, it must be normal user. Atleasr last instruction should be  USER user-name
+
+WORKDIR - it works same like cd in linux or shell
+create folder WORKDIR and dockerfile
+
+FROM almalinux:9
+RUN mkdir /tmp/docker/
+#RUN cd /tmp/docker/
+WORKDIR /tmp/docker/
+RUN pwd
+RUN echo "hello" > hello.txt
+CMD ["sleep","100"]
+
+git push, pull
+cd workdir/
+rebuild, run, execute
+docker build -t workdir:v1 .
+docker run -d workdir:v1
+docker exec -it cont-id bash
+cd /tmp/docker/ --if you run cd command
+ll or ls -l
+find / -iname "hello.txt"
+cd / -> root folder
+ls -l
+
+WORKDIR -> It is used to set the current working directory inside docker image
+
+ARG -
+IT IS USED TO set the variables at build time only, not inside the container
+
+create ARG folder and dockerfile
+FROM alma
+ARG course="devops" \
+    duration="1week"
+RUN echo "course:$course, duration:$duration"
+CMD ["sleep","100"]
+git push, pull and cd to ARG
+rebuild, run, execute -> type env
+after running build command check the console, you can find the arg values here
+ARG vs ENV
+ENV variables can be accessed in both image build time and in the container. ARG variables only accessed at the time of image creation
+you can use arg before from in one special case, that is to supply version to the base image
+arg instruction before from is only valid until from. It can not be accessed after from.
+
+We can override env and arg variables
+docker build -t arg:v1 --build-arg course:k8s .
+
+ARG version
+#FROM almalinux:${version}
+#give version at console
+FROM almalinux:${version:-9}
+ARG course="devops" \
+    duration="1week" \
+RUN echo "course:$course, duration:$duration, version:$version"
+sleep also
+
+How to access arg values inside container ?
+you can set arg value to env variable
+
+ARG course="devops" \
+    duration="1week"
+ENV course=$course
+ENV var-name=$var-name
+
+ONBUILD -
+create a folder onbuild -> build, run
+image name onbuild
+docker images
+create test folder inside onbuild and add index.html file also
+
+name the image name onbuild-test
+FROM alma
+RUN dnf install nginx -y
+RUN rm -rf /usr/share/nginx/html/index.html
+ONBUILD COPY index.html /usr/share/nginx/html/index.html
+CMD ["nginx","-g","daemon off"]
+
+index.html -> <h1>Image Created by onbuild base image</h1>
+
+docker run -d -p 8080:80 onbuild-test:v1 
+
+copy the ip and see the result in web
+onbuild is used to trigger few instructions at build when a user is using our image.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
