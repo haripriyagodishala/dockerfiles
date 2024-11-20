@@ -1,0 +1,3 @@
+FROM almalinux:9
+ARG course="Devops" \
+    duration = "120hrs"
