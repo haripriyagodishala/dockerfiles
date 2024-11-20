@@ -1,0 +1,4 @@
+FROM almalinux:9
+ENV author = "Haripriya"/
+    course = "devops"/
+    duration = "2 hrs"
