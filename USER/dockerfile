@@ -1,2 +1,4 @@
 FROM almalinux:9
 # USER expense
+CMD ["google.com"]
+ENTRYPOINT ["ping"]
