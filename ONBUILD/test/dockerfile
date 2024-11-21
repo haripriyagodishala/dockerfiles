@@ -1,2 +1,1 @@
 FROM build:v1
-ENTRYPOINT ["sleep","1000"]
