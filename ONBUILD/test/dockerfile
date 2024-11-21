@@ -1,2 +1,2 @@
 FROM build:v1
-CMD ["sleep","1000"]
+ENTRYPOINT ["sleep","1000"]
