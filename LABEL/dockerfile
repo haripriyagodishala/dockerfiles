@@ -1,5 +1,5 @@
 FROM almalinux:9
-LABEL author = "Haripriya"/
-      company = "Joindevops"/
-      topic = "docker_files"/
+LABEL author = "Haripriya"\
+      company = "Joindevops"\
+      topic = "docker_files"\
       duration = "1 week"
