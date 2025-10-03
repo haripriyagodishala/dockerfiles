@@ -1,5 +1,5 @@
-# ARG version
-# FROM almalinux:${version:-9}
+ARG version
+FROM almalinux:${version}
 FROM almalinux:9
 # ARG course="Devops" \
 #     duration="120hrs" \
@@ -8,5 +8,5 @@ ENV course="Devops" \
     duration="120hrs" \
     name="Hari"
 # ENV course=$course
-RUN echo "course:$course, duration:$duration, name:$name"
+RUN echo "course:$course, duration:$duration, name:$name, version:$version"
 CMD ["sleep","100"]
