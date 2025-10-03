@@ -8,5 +8,5 @@ ARG course="Devops" \
 #     duration="120hrs" \
 #     name="Hari"
 ENV course=$course
-RUN echo "course:$course, duration:$duration, name:$name, version:$version"
+RUN echo "coursee:$course, duration:$duration, name:$name, version:$version"
 CMD ["sleep","100"]
