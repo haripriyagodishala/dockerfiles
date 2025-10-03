@@ -1,6 +1,6 @@
 ARG version
 FROM almalinux:${version}
-FROM almalinux:9
+# FROM almalinux:9
 # ARG course="Devops" \
 #     duration="120hrs" \
 #     name="Hari"
