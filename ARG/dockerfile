@@ -4,7 +4,8 @@ FROM almalinux:9
 # ARG course="Devops" \
 #     duration="120hrs"
 ENV course="Devops" \
-    duration="120hrs"
+    duration="120hrs" \
+    name="Hari"
 # ENV course=$course
-RUN echo "course:$course, duration:$duration"
+RUN echo "course:$course, duration:$duration, name:$name"
 CMD ["sleep","100"]
