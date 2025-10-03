@@ -1,12 +1,12 @@
 ARG version
 FROM almalinux:${version:-9}
 # FROM almalinux:9
-# ARG course="Devops" \
-#     duration="120hrs" \
-#     name="Hari"
-ENV course="Devops" \
+ARG course="Devops" \
     duration="120hrs" \
     name="Hari"
-# ENV course=$course
+# ENV course="Devops" \
+#     duration="120hrs" \
+#     name="Hari"
+ENV course=$course
 RUN echo "course:$course, duration:$duration, name:$name, version:$version"
 CMD ["sleep","100"]
